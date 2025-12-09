@@ -1,0 +1,13 @@
+{
+  "name": "worldofsoumya",
+  "version": "1.0.0",
+  "description": "Soumya Giri's personal website",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'No build required for static site'",
+    "build": "echo 'No build required for static site'"
+  },
+  "author": "Soumya Giri",
+  "license": "MIT",
+  "dependencies": {}
+}
