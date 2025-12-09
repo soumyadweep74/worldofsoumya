@@ -1,131 +1,115 @@
-const imageUpload = document.getElementById('imageUpload');
-const webcamToggle = document.getElementById('webcamToggle');
-const captureButton = document.getElementById('captureButton');
-const webcamFeed = document.getElementById('webcamFeed');
-const imagePreview = document.getElementById('imagePreview');
-const webcamContainer = document.querySelector('.webcam-container');
-const statusMessage = document.getElementById('statusMessage');
-const labelList = document.getElementById('labelList');
-const imageCanvas = document.getElementById('imageCanvas');
-let stream = null; 
+const UPLOAD_FORM = document.getElementById('upload-form');
+const IMAGE_INPUT = document.getElementById('image-input');
+const IMAGE_DISPLAY = document.getElementById('image-display');
+const ANALYZE_BUTTON = document.getElementById('analyze-button');
+const RESULTS_DIV = document.getElementById('analysis-results');
 
-function fileToBase64(file) {
+// URL for your Netlify Function
+const FUNCTION_URL = '/.netlify/functions/gemini-vision';
+
+// --- Utility Functions ---
+
+/**
+ * Converts a File object to a base64-encoded string and extracts mimeType
+ * @param {File} file
+ * @returns {Promise<{data: string, mimeType: string}>}
+ */
+const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result.split(',')[1]); 
-        reader.onerror = (error) => reject(error);
-    });
-}
-
-// THIS IS THE FINAL CODE BLOCK THAT CALLS THE NETLIFY FUNCTION
-async function sendImageToAI(imageFile) {
-    statusMessage.textContent = 'Analyzing image... Please wait.';
-    labelList.innerHTML = ''; 
-
-    try {
-        const base64Image = await fileToBase64(imageFile);
-
-        const payload = {
-            image: base64Image,
-            prompt: "Describe the image in one sentence. Then, list all identifiable objects or labels, each on a new line." 
+        reader.onload = () => {
+            // Data URL format: data:[<mime type>][;base64],<data>
+            const [metadata, data] = reader.result.split(',');
+            const mimeType = metadata.split(':')[1].split(';')[0];
+            resolve({ data, mimeType }); // Returns the required {data, mimeType} object
         };
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+};
 
-        // --- REAL API CALL ---
-        const response = await fetch('/.netlify/functions/gemini-vision', { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
+/**
+ * Sends the base64 image data to the Netlify Function for AI analysis
+ * @param {{data: string, mimeType: string}} imageBase64Data
+ * @returns {Promise<string>} The AI generated description
+ */
+const generateImageDescription = async (imageBase64Data) => {
+    const response = await fetch(FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageBase64Data }), // Sends the correct {image: {data, mimeType}} structure
+    });
 
-        if (!response.ok) {
-            throw new Error(`Serverless Function Error! Status: ${response.status}`);
+    if (!response.ok) {
+        // Attempt to parse error message from function
+        const errorText = await response.text();
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+            const errorJson = JSON.parse(errorText);
+            // This is the error message from the server function:
+            errorMessage = errorJson.error || errorMessage; 
+        } catch (e) {
+            // If response is not JSON, use the HTTP status
         }
-
-        const result = await response.json();
-        
-        // --- Display REAL Results ---
-        if (result.description && result.labels) {
-            statusMessage.textContent = `Analysis Complete: ${result.description}`;
-            
-            result.labels.forEach(label => {
-                const li = document.createElement('li');
-                li.textContent = label;
-                labelList.appendChild(li);
-            });
-        } else {
-            statusMessage.textContent = "Error: Could not parse AI response.";
-            console.error("AI Response Structure Invalid:", result);
-        }
-
-    } catch (error) {
-        console.error('AI Analysis Failed:', error);
-        statusMessage.textContent = `Error during analysis. Please ensure Netlify Function is deployed and the API Key is set.`;
+        throw new Error(errorMessage);
     }
-}
 
+    const data = await response.json();
+    return data.description;
+};
 
-// --- Event Listeners (Same as before) ---
-imageUpload.addEventListener('change', function(event) {
+// --- Event Handlers ---
+
+IMAGE_INPUT.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
-        imagePreview.src = URL.createObjectURL(file);
-        imagePreview.style.display = 'block';
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            stream = null;
-            webcamContainer.style.display = 'none';
-            webcamToggle.textContent = 'Start Camera';
-            captureButton.disabled = true;
-        }
-        sendImageToAI(file);
-    }
-});
-
-webcamToggle.addEventListener('click', async () => {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
-        webcamContainer.style.display = 'none';
-        webcamToggle.textContent = 'Start Camera';
-        captureButton.disabled = true;
+        // Display image preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            IMAGE_DISPLAY.src = e.target.result;
+            IMAGE_DISPLAY.style.display = 'block';
+            ANALYZE_BUTTON.disabled = false;
+        };
+        reader.readAsDataURL(file);
     } else {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            webcamFeed.srcObject = stream;
-            webcamContainer.style.display = 'block';
-            webcamToggle.textContent = 'Stop Camera';
-            captureButton.disabled = false;
-            imagePreview.style.display = 'none';
-        } catch (error) {
-            alert('Cannot access camera. Please check permissions.');
-            console.error('Webcam Error:', error);
-        }
+        IMAGE_DISPLAY.style.display = 'none';
+        ANALYZE_BUTTON.disabled = true;
     }
+    // Clear previous results
+    RESULTS_DIV.innerHTML = '';
 });
 
-captureButton.addEventListener('click', () => {
-    const context = imageCanvas.getContext('2d');
-    
-    imageCanvas.width = webcamFeed.videoWidth;
-    imageCanvas.height = webcamFeed.videoHeight;
-    context.drawImage(webcamFeed, 0, 0, imageCanvas.width, imageCanvas.height);
-    
-    imageCanvas.toBlob(function(blob) {
-        const capturedFile = new File([blob], "capture.png", { type: "image/png" });
-        
-        imagePreview.src = URL.createObjectURL(capturedFile);
-        imagePreview.style.display = 'block';
-        
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
-        webcamContainer.style.display = 'none';
-        webcamToggle.textContent = 'Start Camera';
-        captureButton.disabled = true;
+UPLOAD_FORM.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-        sendImageToAI(capturedFile);
+    const file = IMAGE_INPUT.files[0];
+    if (!file) {
+        RESULTS_DIV.innerHTML = '<p class="error">Please select an image first.</p>';
+        return;
+    }
 
-    }, 'image/png');
+    RESULTS_DIV.innerHTML = '<p class="loading">Analyzing image... This may take a moment.</p>';
+    ANALYZE_BUTTON.disabled = true;
+
+    try {
+        const imageBase64Data = await fileToBase64(file);
+        const description = await generateImageDescription(imageBase64Data);
+
+        // Display success results
+        RESULTS_DIV.innerHTML = `
+            <h3>Analysis Complete</h3>
+            <p class="description">${description}</p>
+        `;
+    } catch (error) {
+        // Display error message
+        console.error("Analysis failed:", error);
+        RESULTS_DIV.innerHTML = `
+            <p class="error">Error during analysis. Please ensure Netlify Function is deployed and the API Key is set.</p>
+            <p class="error-detail">Details: ${error.message}</p>
+        `;
+    } finally {
+        ANALYZE_BUTTON.disabled = false;
+    }
 });
