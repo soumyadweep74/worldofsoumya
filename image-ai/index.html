@@ -11,23 +11,27 @@
         <h1>AI Image Recognition Tool</h1>
 
         <section>
-            <h2>1. Select Image</h2>
-            <form id="upload-form">
-                <input type="file" id="image-input" accept="image/*" required>
-                <button type="submit" id="analyze-button" disabled>Analyze Image with AI</button>
-            </form>
-            <div class="image-preview">
-                <img id="image-display" src="#" alt="Image Preview" style="display:none;">
+            <h2>1. Select or Capture Image</h2>
+            <div class="controls">
+                <input type="file" id="image-upload" accept="image/*">
+                <button id="webcam-toggle">Start Camera</button>
             </div>
+            
+            <div class="webcam-container" style="display:none;">
+                <video id="webcam-feed" autoplay playsinline></video>
+                <button id="capture-button" disabled>Capture Image</button>
+            </div>
+
+            <img id="image-preview" style="display:none;">
+            <canvas id="image-canvas" style="display:none;"></canvas> 
         </section>
 
         <hr>
 
         <section>
             <h2>2. AI Analysis Results</h2>
-            <div id="analysis-results">
-                <p>Waiting for image selection and analysis...</p>
-            </div>
+            <p id="status-message">Waiting for image...</p>
+            <ul id="label-list"></ul>
         </section>
     </div>
 
