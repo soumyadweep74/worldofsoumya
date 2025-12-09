@@ -1,0 +1,13 @@
+# netlify.toml file in the repository root
+
+[build]
+  # Tell Netlify where the static files for your website are (the /image-ai folder)
+  publish = "worldofsoumya/image-ai"
+  # Tell Netlify where to find your functions
+  functions = "worldofsoumya/netlify/functions"
+  # Tell Netlify the build command, which will automatically install dependencies 
+  command = "npm install"
+
+[functions]
+  # Explicitly tell Netlify to install dependencies for the functions folder
+  node_bundler = "esbuild"
