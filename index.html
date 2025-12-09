@@ -12,13 +12,14 @@
       color: #00ff7f;
     }
 
-    header {
+    /* Full-screen header */
+    #splash {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
       text-align: center;
-      flex-direction: column;
     }
 
     h1, p {
@@ -36,8 +37,9 @@
       font-weight: 500;
     }
 
-    /* Example section to show content after header */
-    section {
+    /* Main content hidden initially */
+    #mainContent {
+      display: none;
       padding: 50px;
       background-color: #111;
       min-height: 100vh;
@@ -45,17 +47,25 @@
   </style>
 </head>
 <body>
-  <header>
+  <!-- Splash Intro -->
+  <div id="splash">
     <h1 id="headerText"></h1>
     <p id="line1"></p>
     <p id="line2"></p>
-  </header>
+  </div>
 
-  <!-- Example section below header -->
-  <section>
-    <h2>About Me</h2>
-    <p>This is where your portfolio content can go. Now it will appear normally after the typewriter animation.</p>
-  </section>
+  <!-- Main Content -->
+  <div id="mainContent">
+    <nav>
+      <button onclick="alert('Home clicked')">Home</button>
+      <button onclick="alert('Contact Me clicked')">Contact Me</button>
+    </nav>
+
+    <section id="about">
+      <h2>About Me</h2>
+      <p>This is the main page content. It appears after the typewriter animation.</p>
+    </section>
+  </div>
 
   <script>
     const headerLine = "Hello, I am Soumyadweep Giri";
@@ -63,7 +73,6 @@
       "B.Tech CSE Student",
       "Web Developer & Tech Enthusiast"
     ];
-
     const typingSpeed = 100;
 
     // Type main header
@@ -81,9 +90,12 @@
       typeChar();
     }
 
-    // Type subsequent lines
     function typeOtherLines(lineNum) {
-      if (lineNum >= otherLines.length) return;
+      if (lineNum >= otherLines.length) {
+        // Animation finished → show main content
+        setTimeout(showMainContent, 500);
+        return;
+      }
       let charIdx = 0;
       const lineText = otherLines[lineNum];
       function typeChar() {
@@ -98,7 +110,11 @@
       typeChar();
     }
 
-    // Start animation immediately after DOM loads
+    function showMainContent() {
+      document.getElementById("splash").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+    }
+
     document.addEventListener("DOMContentLoaded", typeHeader);
   </script>
 </body>
