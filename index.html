@@ -3,68 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soumya Giri - Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Soumyadweep Giri - B.Tech CSE Student, Web Developer, and Tech Enthusiast">
+  <title>Soumyadweep Giri Portfolio</title>
+  <style>
+    /* Body & Background */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d0d0d; /* dark background for glowing effect */
+      color: #00ff7f; /* glowing green text */
+    }
+
+    /* Header Section */
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    /* Glowing Text */
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      text-shadow: 0 0 5px #00ff7f, 0 0 10px #00ff7f, 0 0 20px #00ff7f;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
-
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <h2 class="logo">Soumya.<span class="glow">dev</span></h2>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact">Contact</a>
-    </nav>
+  <header>
+    <h1 id="headerText"></h1>
   </header>
 
-  <!-- HERO SECTION -->
-  <section id="home" class="hero">
-    <h1>Hi, I'm <span class="accent">Soumya Giri</span></h1>
-    <h2 class="tagline">B.Tech CSE Student • Web Developer • Tech Enthusiast</h2>
-    <p class="hero-text">Passionate about building clean, responsive and creative websites.</p>
+  <script>
+    const headerLine = "Hello, I am Soumyadweep Giri";
+    let charIndex = 0;
+    const typingSpeed = 100; // milliseconds per character
 
-    <a href="#contact" class="btn">Get in Touch</a>
-  </section>
+    function typeHeader() {
+      if (charIndex < headerLine.length) {
+        document.getElementById("headerText").innerHTML += headerLine.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeHeader, typingSpeed);
+      }
+    }
 
-  <!-- ABOUT SECTION -->
-  <section id="about" class="card">
-    <h2>About Me</h2>
-    <p>
-      I'm a Computer Science student who loves creating modern websites with futuristic UI.
-      I enjoy coding, problem solving, and learning new technologies that help me grow as a developer.
-    </p>
-  </section>
-
-  <!-- SKILLS SECTION -->
-  <section id="skills" class="card">
-    <h2>Skills</h2>
-    <div class="skills-list">
-      <span class="skill">HTML</span>
-      <span class="skill">CSS</span>
-      <span class="skill">JavaScript</span>
-      <span class="skill">Tailwind</span>
-      <span class="skill">Python</span>
-    </div>
-  </section>
-
-  <!-- CONTACT SECTION -->
-  <section id="contact" class="card">
-    <h2>Contact Me</h2>
-    <p>Feel free to send me a message.</p>
-
-    <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Email Address" required>
-      <textarea placeholder="Your Message" required></textarea>
-      <button type="submit" class="btn">Send Message</button>
-    </form>
-  </section>
-
-  <footer>
-    <p>© 2025 Soumya Giri — All Rights Reserved.</p>
-  </footer>
-
+    window.onload = typeHeader;
+  </script>
 </body>
 </html>
