@@ -1,54 +1,65 @@
-const fetch = require("node-fetch");
+const { GoogleGenAI } = require('@google/genai');
 
-exports.handler = async (event, context) => {
+// Make sure the API key is accessible in Netlify Environment Variables
+const API_KEY = process.env.GEMINI_API_KEY;
+
+if (!API_KEY) {
+    // Return a 500 error if the key is missing to trigger the client-side error
+    exports.handler = async (event) => {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'API Key not set' }),
+        };
+    };
+    return;
+}
+
+// Initialize the SDK using the environment variable key
+const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+exports.handler = async (event) => {
     try {
-        const body = JSON.parse(event.body);
-
-        const apiKey = process.env.GEMINI_API_KEY;
-
-        if (!apiKey) {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: "API Key missing" })
-            };
+        if (event.httpMethod !== 'POST') {
+            return { statusCode: 405, body: 'Method Not Allowed' };
         }
 
-        const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=" + apiKey,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [
-                            { text: body.prompt },
-                            { inline_data: { mime_type: "image/jpeg", data: body.image } }
-                        ]
-                    }]
-                })
-            }
-        );
+        const body = JSON.parse(event.body);
+        const image = body.image; // This comes from your client-side main.js
 
-        const data = await response.json();
+        if (!image || !image.data || !image.mimeType) {
+            return { statusCode: 400, body: JSON.stringify({ error: 'Missing image data' }) };
+        }
 
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received";
+        // Construct the parts array for the vision model
+        const imagePart = {
+            inlineData: {
+                data: image.data,
+                mimeType: image.mimeType,
+            },
+        };
 
-        const lines = aiText.split("\n").filter(l => l.trim() !== "");
+        const promptPart = {
+            text: "Describe this image in a single, detailed sentence.",
+        };
+
+        const modelResponse = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: [imagePart, promptPart],
+        });
+
+        const description = modelResponse.text.trim();
 
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                description: lines[0],
-                labels: lines.slice(1)
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description }),
         };
-
-    } catch (err) {
+    } catch (error) {
+        console.error('Gemini Function Error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: err.message })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ error: 'Internal Server Error during AI processing: ' + error.message }),
         };
     }
 };
