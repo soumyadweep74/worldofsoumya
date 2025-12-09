@@ -1,36 +1,44 @@
+// netlify/functions/gemini-vision.js
 const { GoogleGenAI } = require('@google/genai');
 
-// Make sure the API key is accessible in Netlify Environment Variables
+// Make sure the API key is set in Netlify Environment Variables
 const API_KEY = process.env.GEMINI_API_KEY;
 
 if (!API_KEY) {
-    // Return a 500 error if the key is missing to trigger the client-side error
-    exports.handler = async (event) => {
+    exports.handler = async () => {
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'API Key not set' }),
+            body: JSON.stringify({ error: 'API Key not set in environment variables' }),
         };
     };
     return;
 }
 
-// Initialize the SDK using the environment variable key
+// Initialize Google Gemini SDK
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 exports.handler = async (event) => {
     try {
+        // Only allow POST requests
         if (event.httpMethod !== 'POST') {
-            return { statusCode: 405, body: 'Method Not Allowed' };
+            return {
+                statusCode: 405,
+                body: 'Method Not Allowed',
+            };
         }
 
+        // Parse JSON body
         const body = JSON.parse(event.body);
-        const image = body.image; // This comes from your client-side main.js
+        const image = body.image;
 
         if (!image || !image.data || !image.mimeType) {
-            return { statusCode: 400, body: JSON.stringify({ error: 'Missing image data' }) };
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Missing image data or mimeType' }),
+            };
         }
 
-        // Construct the parts array for the vision model
+        // Prepare input for Gemini
         const imagePart = {
             inlineData: {
                 data: image.data,
@@ -42,6 +50,7 @@ exports.handler = async (event) => {
             text: "Describe this image in a single, detailed sentence.",
         };
 
+        // Generate AI content
         const modelResponse = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: [imagePart, promptPart],
@@ -59,7 +68,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ error: 'Internal Server Error during AI processing: ' + error.message }),
+            body: JSON.stringify({ error: 'Internal Server Error: ' + error.message }),
         };
     }
 };
