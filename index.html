@@ -3,51 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Soumyadweep Giri - B.Tech CSE Student, Web Developer, and Tech Enthusiast">
   <title>Soumyadweep Giri Portfolio</title>
   <style>
-    /* Body & Background */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0d0d0d; /* dark background for glowing effect */
-      color: #00ff7f; /* glowing green text */
+      background-color: #0d0d0d;
+      color: #00ff7f;
     }
 
-    /* Header Section */
     header {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       text-align: center;
+      flex-direction: column;
     }
 
-    /* Glowing Text */
+    h1, p {
+      margin: 10px 0;
+      text-shadow: 0 0 5px #00ff7f, 0 0 10px #00ff7f, 0 0 20px #00ff7f;
+    }
+
     h1 {
       font-size: 3rem;
       font-weight: 700;
-      text-shadow: 0 0 5px #00ff7f, 0 0 10px #00ff7f, 0 0 20px #00ff7f;
-      margin: 0;
+    }
+
+    p {
+      font-size: 1.5rem;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <header>
     <h1 id="headerText"></h1>
+    <p id="line1"></p>
+    <p id="line2"></p>
   </header>
 
   <script>
     const headerLine = "Hello, I am Soumyadweep Giri";
-    let charIndex = 0;
-    const typingSpeed = 100; // milliseconds per character
+    const otherLines = [
+      "B.Tech CSE Student",
+      "Web Developer & Tech Enthusiast"
+    ];
 
+    let charIndex = 0;
+    const typingSpeed = 100;
+
+    // Type main header
     function typeHeader() {
       if (charIndex < headerLine.length) {
         document.getElementById("headerText").innerHTML += headerLine.charAt(charIndex);
         charIndex++;
         setTimeout(typeHeader, typingSpeed);
+      } else {
+        // After header is done, start typing other lines
+        typeOtherLines(0);
       }
+    }
+
+    function typeOtherLines(lineNum) {
+      if (lineNum >= otherLines.length) return; // done
+      let charIdx = 0;
+      const lineText = otherLines[lineNum];
+      function typeChar() {
+        if (charIdx < lineText.length) {
+          document.getElementById(`line${lineNum + 1}`).innerHTML += lineText.charAt(charIdx);
+          charIdx++;
+          setTimeout(typeChar, typingSpeed);
+        } else {
+          setTimeout(() => typeOtherLines(lineNum + 1), 500); // next line
+        }
+      }
+      typeChar();
     }
 
     window.onload = typeHeader;
