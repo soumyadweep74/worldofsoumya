@@ -32,24 +32,20 @@ async function sendImageToAI(imageFile) {
         // 2. Convert File to Base64 
         const base64Image = await fileToBase64(imageFile);
 
-        // 3. Define the API Payload (Placeholder for real AI API call)
+        // 3. Define the API Payload
         const payload = {
             image: base64Image,
             prompt: "Describe the image and list all identifiable objects." 
         };
 
-        // 4. Send Request to a (secure) backend endpoint (You would replace this URL)
-        // Since we don't have a backend set up yet, we will show a dummy result
-        // const response = await fetch('YOUR_API_ENDPOINT_HERE', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(payload),
-        // });
-
-        // --- 5. Display Dummy Results (for testing the front-end) ---
+        // 4. Send Request to a (secure) backend endpoint.
+        // NOTE: This URL '/.netlify/functions/gemini-vision' is the final URL 
+        // we will use after setting up the Netlify function.
         
-        statusMessage.textContent = "Analysis Complete: (Dummy Result)";
-        const dummyLabels = ["Object identified: Dog/Cat", "Color detected: Varies", "Environment: Unknown"];
+        // --- For now, we show a DUMMY result ---
+        
+        statusMessage.textContent = "Analysis Complete: (DUMMY Result)";
+        const dummyLabels = ["Object identified: Toy Car", "Color detected: Red and Blue", "Environment: Desk"];
         dummyLabels.forEach(label => {
             const li = document.createElement('li');
             li.textContent = label + " (Placeholder)";
