@@ -7,6 +7,8 @@
   functions = "worldofsoumya/netlify/functions"
   # Tell Netlify the build command, which will automatically install dependencies 
   command = "npm install"
+  # CRITICAL FIX: Forces isolated dependency installation
+  environment = { NPM_FLAGS = "--legacy-peer-deps" }
 
 [functions]
   # Explicitly tell Netlify to install dependencies for the functions folder
