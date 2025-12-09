@@ -19,22 +19,17 @@ let isDeleting = false;
 
 function typeEffect() {
     const currentLine = typingLines[line];
-
-    // Add or remove characters
     typingElement.innerHTML = currentLine.substring(0, char);
 
     if (!isDeleting) {
-        // Typing forward
         if (char < currentLine.length) {
             char++;
             setTimeout(typeEffect, 70);
         } else {
-            // End pause
             setTimeout(() => (isDeleting = true), 1000);
             setTimeout(typeEffect, 1000);
         }
     } else {
-        // Deleting backwards
         if (char > 0) {
             char--;
             setTimeout(typeEffect, 40);
@@ -49,6 +44,7 @@ function typeEffect() {
 document.addEventListener("DOMContentLoaded", () => {
     typeEffect();
 });
+
 
 /* =========================================
     EmailJS Contact Form (Error Handling Added)
@@ -89,6 +85,7 @@ if (contactForm) {
     });
 }
 
+
 /* =========================================
     Smooth Scroll for Menu Links
     ========================================= */
@@ -100,6 +97,7 @@ document.querySelectorAll("nav ul li a").forEach((link) => {
         target.scrollIntoView({ behavior: "smooth" });
     });
 });
+
 
 /* =========================================
     Scroll Animation Trigger Enhancements (AOS)
@@ -113,4 +111,45 @@ if (typeof AOS !== 'undefined') {
     });
 } else {
     console.warn("AOS library not loaded. Scroll animations are disabled.");
+}
+
+
+/* =========================================
+    AI Analysis Function Call
+    ========================================= */
+
+async function analyzeAI(inputText) {
+    const apiUrl = "/.netlify/functions/ai-analysis"; // Replace with your function file name
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: inputText })
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const result = await response.json();
+        console.log("AI Analysis Result:", result);
+
+        // Optional: show result on the page
+        const resultContainer = document.getElementById("ai-result");
+        if (resultContainer) resultContainer.innerText = JSON.stringify(result, null, 2);
+
+        return result;
+    } catch (err) {
+        console.error("Error calling AI function:", err);
+    }
+}
+
+// Example usage: trigger AI analysis on button click
+const aiButton = document.getElementById("aiButton");
+if (aiButton) {
+    aiButton.addEventListener("click", () => {
+        const inputText = document.getElementById("aiInput")?.value || "Hello AI!";
+        analyzeAI(inputText);
+    });
 }
