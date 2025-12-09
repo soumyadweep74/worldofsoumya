@@ -1,42 +1,54 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const fetch = require("node-fetch");
 
-export default async (req, res) => {
+exports.handler = async (event, context) => {
     try {
-        const { image, prompt } = JSON.parse(req.body);
+        const body = JSON.parse(event.body);
 
-        // Load API key from Netlify environment variable
-        const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const apiKey = process.env.GEMINI_API_KEY;
 
-        const result = await model.generateContent({
-            contents: [
-                {
-                    role: "user",
-                    parts: [
-                        { text: prompt },
-                        {
-                            inline_data: {
-                                mime_type: "image/png",
-                                data: image
-                            }
-                        }
-                    ]
-                }
-            ]
-        });
+        if (!apiKey) {
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "API Key missing" })
+            };
+        }
 
-        const text = result.response.text();
+        const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=" + apiKey,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: body.prompt },
+                            { inline_data: { mime_type: "image/jpeg", data: body.image } }
+                        ]
+                    }]
+                })
+            }
+        );
 
-        // Split output: 1st line = description, rest = labels
-        const [firstLine, ...otherLines] = text.split("\n");
+        const data = await response.json();
 
-        res.status(200).json({
-            description: firstLine,
-            labels: otherLines.filter(line => line.trim() !== "")
-        });
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received";
 
-    } catch (error) {
-        console.error("Function Error:", error);
-        res.status(500).json({ error: "Gemini Vision function failed." });
+        const lines = aiText.split("\n").filter(l => l.trim() !== "");
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                description: lines[0],
+                labels: lines.slice(1)
+            })
+        };
+
+    } catch (err) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: err.message })
+        };
     }
 };
