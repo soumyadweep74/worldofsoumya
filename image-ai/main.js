@@ -1,8 +1,13 @@
-const UPLOAD_FORM = document.getElementById('upload-form');
-const IMAGE_INPUT = document.getElementById('image-input');
-const IMAGE_DISPLAY = document.getElementById('image-display');
-const ANALYZE_BUTTON = document.getElementById('analyze-button');
-const RESULTS_DIV = document.getElementById('analysis-results');
+const IMAGE_UPLOAD = document.getElementById('image-upload');
+const WEBCAM_TOGGLE = document.getElementById('webcam-toggle');
+const CAPTURE_BUTTON = document.getElementById('capture-button');
+const WEBCAM_FEED = document.getElementById('webcam-feed');
+const IMAGE_PREVIEW = document.getElementById('image-preview');
+const WEBCAM_CONTAINER = document.querySelector('.webcam-container');
+const STATUS_MESSAGE = document.getElementById('status-message');
+const LABEL_LIST = document.getElementById('label-list');
+const IMAGE_CANVAS = document.getElementById('image-canvas');
+let stream = null; 
 
 // URL for your Netlify Function
 const FUNCTION_URL = '/.netlify/functions/gemini-vision';
@@ -14,7 +19,7 @@ const FUNCTION_URL = '/.netlify/functions/gemini-vision';
  * @param {File} file
  * @returns {Promise<{data: string, mimeType: string}>}
  */
-const fileToBase64 = (file) => {
+function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -23,93 +28,127 @@ const fileToBase64 = (file) => {
             const mimeType = metadata.split(':')[1].split(';')[0];
             resolve({ data, mimeType }); // Returns the required {data, mimeType} object
         };
-        reader.onerror = error => reject(error);
+        reader.onerror = (error) => reject(error);
         reader.readAsDataURL(file);
     });
-};
+}
 
 /**
- * Sends the base64 image data to the Netlify Function for AI analysis
- * @param {{data: string, mimeType: string}} imageBase64Data
- * @returns {Promise<string>} The AI generated description
+ * Sends the image data to the Netlify Function for AI analysis
  */
-const generateImageDescription = async (imageBase64Data) => {
-    const response = await fetch(FUNCTION_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: imageBase64Data }), // Sends the correct {image: {data, mimeType}} structure
-    });
-
-    if (!response.ok) {
-        // Attempt to parse error message from function
-        const errorText = await response.text();
-        let errorMessage = `HTTP error! status: ${response.status}`;
-        try {
-            const errorJson = JSON.parse(errorText);
-            // This is the error message from the server function:
-            errorMessage = errorJson.error || errorMessage; 
-        } catch (e) {
-            // If response is not JSON, use the HTTP status
-        }
-        throw new Error(errorMessage);
-    }
-
-    const data = await response.json();
-    return data.description;
-};
-
-// --- Event Handlers ---
-
-IMAGE_INPUT.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        // Display image preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            IMAGE_DISPLAY.src = e.target.result;
-            IMAGE_DISPLAY.style.display = 'block';
-            ANALYZE_BUTTON.disabled = false;
-        };
-        reader.readAsDataURL(file);
-    } else {
-        IMAGE_DISPLAY.style.display = 'none';
-        ANALYZE_BUTTON.disabled = true;
-    }
-    // Clear previous results
-    RESULTS_DIV.innerHTML = '';
-});
-
-UPLOAD_FORM.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const file = IMAGE_INPUT.files[0];
-    if (!file) {
-        RESULTS_DIV.innerHTML = '<p class="error">Please select an image first.</p>';
-        return;
-    }
-
-    RESULTS_DIV.innerHTML = '<p class="loading">Analyzing image... This may take a moment.</p>';
-    ANALYZE_BUTTON.disabled = true;
+async function sendImageToAI(file) {
+    STATUS_MESSAGE.textContent = 'Analyzing image... Please wait.';
+    LABEL_LIST.innerHTML = ''; 
 
     try {
+        // Correctly prepare the image payload for the serverless function
         const imageBase64Data = await fileToBase64(file);
-        const description = await generateImageDescription(imageBase64Data);
 
-        // Display success results
-        RESULTS_DIV.innerHTML = `
-            <h3>Analysis Complete</h3>
-            <p class="description">${description}</p>
-        `;
+        const response = await fetch(FUNCTION_URL, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ image: imageBase64Data }), // Sends the correct {image: {data, mimeType}} structure
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = `Serverless Function Error! Status: ${response.status}`;
+            try {
+                const errorJson = JSON.parse(errorText);
+                // This is the error message from the server function:
+                errorMessage = errorJson.error || errorMessage; 
+            } catch (e) {
+                // Ignore parsing error
+            }
+            throw new Error(errorMessage);
+        }
+
+        const result = await response.json();
+        
+        // --- Display REAL Results ---
+        if (result.description) {
+            // The deployed function returns a description string
+            STATUS_MESSAGE.textContent = `Analysis Complete:`;
+            LABEL_LIST.innerHTML = `
+                <li>${result.description}</li>
+            `;
+        } else {
+            STATUS_MESSAGE.textContent = "Error: Could not parse AI response.";
+            console.error("AI Response Structure Invalid:", result);
+        }
+
     } catch (error) {
-        // Display error message
-        console.error("Analysis failed:", error);
-        RESULTS_DIV.innerHTML = `
-            <p class="error">Error during analysis. Please ensure Netlify Function is deployed and the API Key is set.</p>
-            <p class="error-detail">Details: ${error.message}</p>
-        `;
-    } finally {
-        ANALYZE_BUTTON.disabled = false;
+        console.error('AI Analysis Failed:', error);
+        STATUS_MESSAGE.textContent = `Error during analysis. Please ensure Netlify Function is deployed and the API Key is set.`;
+        LABEL_LIST.innerHTML = `<li class="error-detail">Details: ${error.message}</li>`;
     }
+}
+
+
+// --- Event Listeners ---
+IMAGE_UPLOAD.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        IMAGE_PREVIEW.src = URL.createObjectURL(file);
+        IMAGE_PREVIEW.style.display = 'block';
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+            WEBCAM_CONTAINER.style.display = 'none';
+            WEBCAM_TOGGLE.textContent = 'Start Camera';
+            CAPTURE_BUTTON.disabled = true;
+        }
+        // CRITICAL: Automatically trigger analysis upon file selection
+        sendImageToAI(file); 
+    }
+});
+
+WEBCAM_TOGGLE.addEventListener('click', async () => {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+        WEBCAM_CONTAINER.style.display = 'none';
+        WEBCAM_TOGGLE.textContent = 'Start Camera';
+        CAPTURE_BUTTON.disabled = true;
+    } else {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            WEBCAM_FEED.srcObject = stream;
+            WEBCAM_CONTAINER.style.display = 'block';
+            WEBCAM_TOGGLE.textContent = 'Stop Camera';
+            CAPTURE_BUTTON.disabled = false;
+            IMAGE_PREVIEW.style.display = 'none';
+        } catch (error) {
+            alert('Cannot access camera. Please check permissions.');
+            console.error('Webcam Error:', error);
+        }
+    }
+});
+
+CAPTURE_BUTTON.addEventListener('click', () => {
+    const context = IMAGE_CANVAS.getContext('2d');
+    
+    IMAGE_CANVAS.width = WEBCAM_FEED.videoWidth;
+    IMAGE_CANVAS.height = WEBCAM_FEED.videoHeight;
+    context.drawImage(WEBCAM_FEED, 0, 0, IMAGE_CANVAS.width, IMAGE_CANVAS.height);
+    
+    IMAGE_CANVAS.toBlob(function(blob) {
+        const capturedFile = new File([blob], "capture.png", { type: "image/png" });
+        
+        IMAGE_PREVIEW.src = URL.createObjectURL(capturedFile);
+        IMAGE_PREVIEW.style.display = 'block';
+        
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+            WEBCAM_CONTAINER.style.display = 'none';
+            WEBCAM_TOGGLE.textContent = 'Start Camera';
+            CAPTURE_BUTTON.disabled = true;
+        }
+        // CRITICAL: Automatically trigger analysis upon capture
+        sendImageToAI(capturedFile); 
+
+    }, 'image/png');
 });
