@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Recognition Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="input-container">
+        <h2>1. Select or Capture Image</h2>
+        
+        <input type="file" id="imageUpload" accept="image/*">
+        <label for="imageUpload" class="upload-btn">Upload Image</label>
+        
+        <button id="webcamToggle">Start Camera</button>
+    </div>
+
+    <div class="webcam-container" style="display:none;">
+        <video id="webcamFeed" autoplay></video>
+        <button id="captureButton" disabled>Capture Photo</button>
+    </div>
+
+    <div class="preview-container">
+        <img id="imagePreview" src="#" alt="Image Preview" style="display:none;">
+        <canvas id="imageCanvas" style="display:none;"></canvas>
+    </div>
+
+    <div id="resultsContainer">
+        <h2>2. AI Analysis Results</h2>
+        <p id="statusMessage">Waiting for image...</p>
+        <ul id="labelList">
+            </ul>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
