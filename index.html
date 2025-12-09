@@ -3,13 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculator</title>
+  <meta name="description" content="Soumya Giri's Portfolio: B.Tech CSE Student, Web Developer, and Tech Enthusiast.">
+  <meta name="keywords" content="Soumya Giri, Portfolio, Computer Science, Web Development, Projects, Kharagpur">
+  <title>Soumya Giri | Computer Science Engineer & Creator</title>
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-  <!-- Your Calculator HTML goes here -->
+  <script>
+    (function() {
+      emailjs.init("u1ubiB9-EbrJEI3Ce");
+    })();
+
+    function sendEmail(event) {
+      event.preventDefault();
+      const form = event.target;
+      const status = document.getElementById('form-status');
+      status.innerText = "Sending...";
+      emailjs.sendForm('service_soumya74', 'template_7v2pu0o', form)
+        .then(() => {
+          status.innerText = "Message sent successfully! 🎉";
+          status.style.color = "#0f9";
+          form.reset();
+        }, () => {
+          status.innerText = "Failed to send. Please try again.";
+          status.style.color = "#f00";
+        });
+    }
+  </script>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="logo">Soumya Giri</div>
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1 id="typing"></h1>
+      <p data-aos="fade-up" data-aos-delay="500">Building innovative solutions with code and creativity.</p>
+      <a href="#skills" class="cta-btn" data-aos="fade-up" data-aos-delay="700">Explore More</a>
+    </div>
+  </section>
+
+  <section id="about" data-aos="fade-up">
+    <div class="container">
+      <h2>About Me</h2>
+      <p>Hi, I'm Soumya, a passionate B.Tech Computer Science Engineering student from Kharagpur. I love coding, gaming, and creating real-world tech solutions.</p>
+    </div>
+  </section>
+
+  <section id="skills" data-aos="fade-up">
+    <div class="container">
+      <h2>My Skills</h2>
+      <div class="skills-grid">
+        <div class="skill">
+          <h3>Python</h3>
+          <div class="progress-bar"><div class="progress" style="width: 75%;"></div></div>
+        </div>
+        <div class="skill">
+          <h3>JavaScript</h3>
+          <div class="progress-bar"><div class="progress" style="width: 80%;"></div></div>
+        </div>
+        <div class="skill">
+          <h3>HTML / CSS</h3>
+          <div class="progress-bar"><div class="progress" style="width: 85%;"></div></div>
+        </div>
+        <div class="skill">
+          <h3>C & Java</h3>
+          <div class="progress-bar"><div class="progress" style="width: 70%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT SECTION COMPLETELY REMOVED -->
+
+  <section id="contact" data-aos="fade-up">
+    <div class="container">
+      <h2>Get In Touch</h2>
+      <form id="contactForm" onsubmit="sendEmail(event)">
+        <input type="text" name="from_name" placeholder="Your Name" required aria-label="Name">
+        <input type="email" name="reply_to" placeholder="Your Email" required aria-label="Email">
+        <textarea name="message" placeholder="Your Message" required aria-label="Message"></textarea>
+        <button type="submit">Send Message</button>
+        <p id="form-status"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Soumya Giri. All rights reserved.</p>
+      <div class="social-links">
+        <a href="https://linkedin.com/in/soumya-giri" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/soumyadweep74" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="mailto:soumya@example.com"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+  </footer>
 
   <script src="main.js"></script>
+  <script>AOS.init();</script>
 </body>
 </html>
