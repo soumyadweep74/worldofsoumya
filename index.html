@@ -35,6 +35,13 @@
       font-size: 1.5rem;
       font-weight: 500;
     }
+
+    /* Example section to show content after header */
+    section {
+      padding: 50px;
+      background-color: #111;
+      min-height: 100vh;
+    }
   </style>
 </head>
 <body>
@@ -44,6 +51,12 @@
     <p id="line2"></p>
   </header>
 
+  <!-- Example section below header -->
+  <section>
+    <h2>About Me</h2>
+    <p>This is where your portfolio content can go. Now it will appear normally after the typewriter animation.</p>
+  </section>
+
   <script>
     const headerLine = "Hello, I am Soumyadweep Giri";
     const otherLines = [
@@ -51,23 +64,26 @@
       "Web Developer & Tech Enthusiast"
     ];
 
-    let charIndex = 0;
     const typingSpeed = 100;
 
     // Type main header
     function typeHeader() {
-      if (charIndex < headerLine.length) {
-        document.getElementById("headerText").innerHTML += headerLine.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeHeader, typingSpeed);
-      } else {
-        // After header is done, start typing other lines
-        typeOtherLines(0);
+      let charIndex = 0;
+      function typeChar() {
+        if (charIndex < headerLine.length) {
+          document.getElementById("headerText").innerHTML += headerLine.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeChar, typingSpeed);
+        } else {
+          typeOtherLines(0);
+        }
       }
+      typeChar();
     }
 
+    // Type subsequent lines
     function typeOtherLines(lineNum) {
-      if (lineNum >= otherLines.length) return; // done
+      if (lineNum >= otherLines.length) return;
       let charIdx = 0;
       const lineText = otherLines[lineNum];
       function typeChar() {
@@ -76,13 +92,14 @@
           charIdx++;
           setTimeout(typeChar, typingSpeed);
         } else {
-          setTimeout(() => typeOtherLines(lineNum + 1), 500); // next line
+          setTimeout(() => typeOtherLines(lineNum + 1), 500);
         }
       }
       typeChar();
     }
 
-    window.onload = typeHeader;
+    // Start animation immediately after DOM loads
+    document.addEventListener("DOMContentLoaded", typeHeader);
   </script>
 </body>
 </html>
