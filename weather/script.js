@@ -1,27 +1,32 @@
-async function getWeather() {
-    const city = document.getElementById("cityInput").value;
-    if (!city) {
-        alert("Please enter a city name!");
+const apiKey = "d0b5a1b132b80a05dd9af971bc43e60d";
+
+function getWeather() {
+    const city = document.getElementById("cityInput").value.trim();
+    const info = document.getElementById("weatherInfo");
+
+    if(city === "") {
+        info.innerHTML = "Please enter a city name!";
         return;
     }
 
-    const apiKey = "https://api.openweathermap.org/data/2.5/weather?q=" 
-    + city +
-    "&appid=1d878dea586c2d8c9d9f92f2189d4ad2&units=metric";
+    info.innerHTML = "Fetching weather... 🌦️";
 
-    const response = await fetch(apiKey);
-    const data = await response.json();
-
-    if (data.cod === "404") {
-        document.getElementById("weatherInfo").innerHTML =
-            `<p>City not found ❌</p>`;
-        return;
-    }
-
-    document.getElementById("weatherInfo").innerHTML = `
-        <h2>${data.name}</h2>
-        <p>🌡 Temperature: ${data.main.temp}°C</p>
-        <p>🌥 Weather: ${data.weather[0].description}</p>
-        <p>💨 Wind Speed: ${data.wind.speed} m/s</p>
-    `;
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+        .then(response => {
+            if(!response.ok) throw new Error("City not found");
+            return response.json();
+        })
+        .then(data => {
+            info.innerHTML = `
+                <h2>${data.name}, ${data.sys.country}</h2>
+                <p><strong>Temperature:</strong> ${data.main.temp} °C</p>
+                <p><strong>Weather:</strong> ${data.weather[0].main}</p>
+                <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+                <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+            `;
+        })
+        .catch(err => {
+            info.innerHTML = "City not found. Try again! ❌";
+            console.error(err);
+        });
 }
