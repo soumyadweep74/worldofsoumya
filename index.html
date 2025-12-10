@@ -3,119 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soumyadweep Giri Portfolio</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0d0d0d;
-      color: #00ff7f;
-    }
+  <meta name="description" content="Soumya Giri's Portfolio: B.Tech CSE Student, Web Developer, and Tech Enthusiast. Explore projects in coding, web dev, and Bengali culture.">
+  <meta name="keywords" content="Soumya Giri, Portfolio, Computer Science, Web Development, Projects, Kharagpur">
 
-    /* Full-screen header */
-    #splash {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      text-align: center;
-    }
+  <title>Soumya Giri | Computer Science Engineer & Creator</title>
 
-    h1, p {
-      margin: 10px 0;
-      text-shadow: 0 0 5px #00ff7f, 0 0 10px #00ff7f, 0 0 20px #00ff7f;
-    }
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
 
-    h1 {
-      font-size: 3rem;
-      font-weight: 700;
-    }
-
-    p {
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
-
-    /* Main content hidden initially */
-    #mainContent {
-      display: none;
-      padding: 50px;
-      background-color: #111;
-      min-height: 100vh;
-    }
-  </style>
-</head>
-<body>
-  <!-- Splash Intro -->
-  <div id="splash">
-    <h1 id="headerText"></h1>
-    <p id="line1"></p>
-    <p id="line2"></p>
-  </div>
-
-  <!-- Main Content -->
-  <div id="mainContent">
-    <nav>
-      <button onclick="alert('Home clicked')">Home</button>
-      <button onclick="alert('Contact Me clicked')">Contact Me</button>
-    </nav>
-
-    <section id="about">
-      <h2>About Me</h2>
-      <p>This is the main page content. It appears after the typewriter animation.</p>
-    </section>
-  </div>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
   <script>
-    const headerLine = "Hello, I am Soumyadweep Giri";
-    const otherLines = [
-      "B.Tech CSE Student",
-      "Web Developer & Tech Enthusiast"
-    ];
-    const typingSpeed = 100;
+    (function() {
+      emailjs.init("u1ubiB9-EbrJEI3Ce");
+    })();
 
-    // Type main header
-    function typeHeader() {
-      let charIndex = 0;
-      function typeChar() {
-        if (charIndex < headerLine.length) {
-          document.getElementById("headerText").innerHTML += headerLine.charAt(charIndex);
-          charIndex++;
-          setTimeout(typeChar, typingSpeed);
-        } else {
-          typeOtherLines(0);
-        }
-      }
-      typeChar();
+    function sendEmail(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const status = document.getElementById('form-status');
+
+      status.innerText = "Sending...";
+
+      emailjs.sendForm('service_soumya74', 'template_7v2pu0o', form)
+      .then(() => {
+        status.innerText = "Message sent successfully! 🎉";
+        status.style.color = "#0f9";
+        form.reset();
+      }, (error) => {
+        status.innerText = "Failed to send. Please try again.";
+        status.style.color = "#f00";
+        console.error(error);
+      });
     }
-
-    function typeOtherLines(lineNum) {
-      if (lineNum >= otherLines.length) {
-        // Animation finished → show main content
-        setTimeout(showMainContent, 500);
-        return;
-      }
-      let charIdx = 0;
-      const lineText = otherLines[lineNum];
-      function typeChar() {
-        if (charIdx < lineText.length) {
-          document.getElementById(`line${lineNum + 1}`).innerHTML += lineText.charAt(charIdx);
-          charIdx++;
-          setTimeout(typeChar, typingSpeed);
-        } else {
-          setTimeout(() => typeOtherLines(lineNum + 1), 500);
-        }
-      }
-      typeChar();
-    }
-
-    function showMainContent() {
-      document.getElementById("splash").style.display = "none";
-      document.getElementById("mainContent").style.display = "block";
-    }
-
-    document.addEventListener("DOMContentLoaded", typeHeader);
   </script>
+</head>
+
+<body>
+
+<header>
+  <nav>
+    <div class="logo">Soumya Giri</div>
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="hero" class="hero">
+  <div class="hero-content" data-aos="fade-up">
+    <h1 id="typing"></h1>
+    <p data-aos="fade-up" data-aos-delay="500">Building innovative solutions with code and creativity.</p>
+    <a href="#projects" class="cta-btn" data-aos="fade-up" data-aos-delay="700">View My Work</a>
+  </div>
+</section>
+
+<section id="about" data-aos="fade-up">
+  <div class="container">
+    <h2>About Me</h2>
+    <p>Hi, I'm Soumya, a passionate B.Tech Computer Science Engineering student from Kharagpur. I love coding, gaming, and creating real-world tech solutions. When not debugging, you'll find me exploring Bengali culture or brainstorming my next project.</p>
+  </div>
+</section>
+
+<section id="skills" data-aos="fade-up">
+  <div class="container">
+    <h2>My Skills</h2>
+
+    <div class="skills-grid">
+      <div class="skill">
+        <h3>Python</h3>
+        <div class="progress-bar"><div class="progress" style="width: 75%;"></div></div>
+      </div>
+
+      <div class="skill">
+        <h3>JavaScript</h3>
+        <div class="progress-bar"><div class="progress" style="width: 80%;"></div></div>
+      </div>
+
+      <div class="skill">
+        <h3>Web Development (HTML/CSS)</h3>
+        <div class="progress-bar"><div class="progress" style="width: 85%;"></div></div>
+      </div>
+
+      <div class="skill">
+        <h3>C & Java</h3>
+        <div class="progress-bar"><div class="progress" style="width: 70%;"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" data-aos="fade-up">
+  <div class="container">
+    <h2>Featured Projects</h2>
+
+    <div class="projects-grid">
+
+      <div class="project-card" data-aos="zoom-in">
+        <img src="https://via.placeholder.com/400x250/0f9/111?text=Bengali+Recipe+Finder">
+        <h3>Bengali Recipe Finder</h3>
+        <p>A dynamic web app for searching and filtering traditional Bengali recipes.</p>
+        <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript, API</p>
+        <a href="https://github.com/soumyadweep74/recipe-finder" target="_blank"><i class="fab fa-github"></i> View Code</a>
+      </div>
+
+      <div class="project-card" data-aos="zoom-in" data-aos-delay="200">
+        <img src="https://via.placeholder.com/400x250/0f9/111?text=KGP+Campus+Map">
+        <h3>KGP Campus Interactive Map</h3>
+        <p>Interactive map of IIT Kharagpur built using Leaflet.js.</p>
+        <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript, Leaflet.js</p>
+        <a href="https://github.com/soumyadweep74/kgp-map" target="_blank"><i class="fab fa-github"></i> View Code</a>
+      </div>
+
+      <div class="project-card" data-aos="zoom-in" data-aos-delay="400">
+        <img src="https://via.placeholder.com/400x250/0f9/111?text=Tagore+Quote+App">
+        <h3>Tagore Quote Generator</h3>
+        <p>A fun app generating random Rabindranath Tagore quotes.</p>
+        <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript</p>
+        <a href="https://github.com/soumyadweep74/tagore-quotes" target="_blank"><i class="fab fa-github"></i> View Code</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact" data-aos="fade-up">
+  <div class="container">
+    <h2>Get In Touch</h2>
+
+    <form id="contactForm" onsubmit="sendEmail(event)">
+      <input type="text" name="from_name" placeholder="Your Name" required>
+      <input type="email" name="reply_to" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+      <p id="form-status"></p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2025 Soumya Giri. All rights reserved.</p>
+
+    <div class="social-links">
+      <a href="https://linkedin.com/in/soumya-giri" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/soumyadweep74" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:soumya@example.com"><i class="fas fa-envelope"></i></a>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>AOS.init();</script>
+
 </body>
 </html>
