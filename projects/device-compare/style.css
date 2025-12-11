@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Device Comparison AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Smart Device Comparison AI</h1>
+    <p>Compare devices intelligently with AI-style verdicts!</p>
+  </header>
+
+  <main>
+    <!-- Step 1: Number of Devices -->
+    <section id="step1" class="step">
+      <h2>Step 1: Choose Number of Devices</h2>
+      <div class="device-count">
+        <button onclick="setDeviceCount(2)">2 Devices</button>
+        <button onclick="setDeviceCount(3)">3 Devices</button>
+        <button onclick="setDeviceCount(4)">4 Devices</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Select Category -->
+    <section id="step2" class="step" style="display:none;">
+      <h2>Step 2: Choose Category for Each Device</h2>
+      <div id="category-selection"></div>
+      <button onclick="goToStep3()">Next → Select Models</button>
+    </section>
+
+    <!-- Step 3: Select Models -->
+    <section id="step3" class="step" style="display:none;">
+      <h2>Step 3: Select Models</h2>
+      <div id="model-selection"></div>
+      <button onclick="generateComparison()">Compare Devices</button>
+    </section>
+
+    <!-- Step 4: AI-Style Comparison Results -->
+    <section id="step4" class="step" style="display:none;">
+      <h2>✅ AI-Style Comparison Results</h2>
+      <div id="comparison-results"></div>
+      <button onclick="restart()">Start Over</button>
+    </section>
+  </main>
+
+  <script src="devices.json" type="module"></script>
+  <script src="rules.js"></script>
+  <script src="search.js"></script>
+  <script src="compare.js"></script>
+</body>
+</html>
