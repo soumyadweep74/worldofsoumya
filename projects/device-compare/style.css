@@ -1,54 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Device Comparison AI</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #0a0a0a;
+  color: #00ff00;
+  margin: 0;
+  padding: 0;
+}
 
-  <header>
-    <h1>Smart Device Comparison AI</h1>
-    <p>Compare devices intelligently with AI-style verdicts!</p>
-  </header>
+header {
+  text-align: center;
+  padding: 20px;
+}
 
-  <main>
-    <!-- Step 1: Number of Devices -->
-    <section id="step1" class="step">
-      <h2>Step 1: Choose Number of Devices</h2>
-      <div class="device-count">
-        <button onclick="setDeviceCount(2)">2 Devices</button>
-        <button onclick="setDeviceCount(3)">3 Devices</button>
-        <button onclick="setDeviceCount(4)">4 Devices</button>
-      </div>
-    </section>
+h1 {
+  font-size: 2rem;
+  text-shadow: 0 0 10px #0f9, 0 0 20px #0f9;
+}
 
-    <!-- Step 2: Select Category -->
-    <section id="step2" class="step" style="display:none;">
-      <h2>Step 2: Choose Category for Each Device</h2>
-      <div id="category-selection"></div>
-      <button onclick="goToStep3()">Next → Select Models</button>
-    </section>
+h2 {
+  text-shadow: 0 0 5px #0f9;
+}
 
-    <!-- Step 3: Select Models -->
-    <section id="step3" class="step" style="display:none;">
-      <h2>Step 3: Select Models</h2>
-      <div id="model-selection"></div>
-      <button onclick="generateComparison()">Compare Devices</button>
-    </section>
+.step {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
 
-    <!-- Step 4: AI-Style Comparison Results -->
-    <section id="step4" class="step" style="display:none;">
-      <h2>✅ AI-Style Comparison Results</h2>
-      <div id="comparison-results"></div>
-      <button onclick="restart()">Start Over</button>
-    </section>
-  </main>
+button {
+  background-color: transparent;
+  color: #0f9;
+  border: 2px solid #0f9;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-shadow: 0 0 5px #0f9;
+}
 
-  <script src="devices.json" type="module"></script>
-  <script src="rules.js"></script>
-  <script src="search.js"></script>
-  <script src="compare.js"></script>
-</body>
-</html>
+button:hover {
+  background-color: #0f9;
+  color: #000;
+  box-shadow: 0 0 20px #0f9, 0 0 40px #0f9;
+}
+
+input, select {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #0f9;
+  background-color: #111;
+  color: #0f9;
+}
+
+.suggestions {
+  background-color: #111;
+  border: 1px solid #0f9;
+  max-height: 150px;
+  overflow-y: auto;
+  text-align: left;
+  margin-top: 2px;
+  position: absolute;
+  width: 200px;
+  z-index: 100;
+}
+
+.suggestion-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #0f9;
+  color: #000;
+}
+
+#comparison-results table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#comparison-results table, th, td {
+  border: 1px solid #0f9;
+  padding: 8px;
+  text-align: center;
+}
