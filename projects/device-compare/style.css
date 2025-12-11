@@ -1,66 +1,20 @@
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #0f0f0f;
-  color: #0f9;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
-header h1 {
-  font-size: 2rem;
-  margin-top: 20px;
-}
-
-header p {
-  font-size: 1.2rem;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  background: #0f9;
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #0cf;
-}
-
-select, input[type=text] {
-  padding: 5px;
-  margin: 10px;
-  border-radius: 5px;
-}
-
-.step {
-  margin: 20px;
-}
-
-.result-card {
+.suggestions {
+  border: 1px solid #0f9;
   background: #111;
-  border: 1px solid #0f9;
-  padding: 15px;
-  margin: 10px auto;
-  width: 300px;
-  border-radius: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  width: 200px;
+  color: #0f9;
+  z-index: 100;
 }
 
-table {
-  margin: 20px auto;
-  border-collapse: collapse;
-  width: 90%;
+.suggestion-item {
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
-table, th, td {
-  border: 1px solid #0f9;
-}
-
-th, td {
-  padding: 8px;
-  text-align: center;
+.suggestion-item:hover {
+  background-color: #0f9;
+  color: #111;
 }
