@@ -1,199 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Device Comparison | Projects</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #0a0a0a;
-  font-family: 'Orbitron', sans-serif;
-  color: #00ff00;
-}
-
-header {
-  text-align: center;
-  padding: 50px 20px 20px;
-}
-
-header h1 {
-  font-size: 3rem;
-  text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
-}
-
-.container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 20px;
-}
-
-.device-card {
-  background: rgba(0,255,0,0.05);
-  border: 1px solid #00ff00;
-  border-radius: 12px;
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 0 20px #00ff00;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.device-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
-}
-
-.device-card h2 {
-  margin-top: 0;
-  font-size: 1.8rem;
-  text-shadow: 0 0 10px #00ff00;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-table, th, td {
-  border: 1px solid #00ff00;
-}
-
-th, td {
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background: rgba(0,255,0,0.1);
-}
-
-.back-btn {
-  display: block;
-  width: fit-content;
-  margin: 40px auto 0;
-  padding: 12px 30px;
-  border: 2px solid #00ff00;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 1.1rem;
-  color: #00ff00;
-  text-decoration: none;
-  box-shadow: 0 0 15px #00ff00;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.back-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Device Comparison AI</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>Smart Device Comparison</h1>
-  <p>Compare daily-use smart devices and choose the best for you!</p>
-</header>
+  <header>
+    <h1>Smart Device Comparison AI</h1>
+    <p>Compare devices intelligently with AI-style verdicts!</p>
+  </header>
 
-<div class="container">
+  <main>
+    <!-- Step 1: Number of Devices -->
+    <section id="step1" class="step">
+      <h2>Step 1: Choose Number of Devices</h2>
+      <div class="device-count">
+        <button onclick="setDeviceCount(2)">2 Devices</button>
+        <button onclick="setDeviceCount(3)">3 Devices</button>
+        <button onclick="setDeviceCount(4)">4 Devices</button>
+      </div>
+    </section>
 
-  <div class="device-card">
-    <h2>Smartphones</h2>
-    <table>
-      <tr>
-        <th>Model</th>
-        <th>Battery</th>
-        <th>Camera</th>
-        <th>Price</th>
-      </tr>
-      <tr>
-        <td>Galaxy S25</td>
-        <td>5000 mAh</td>
-        <td>200 MP</td>
-        <td>₹80,000</td>
-      </tr>
-      <tr>
-        <td>iPhone 17</td>
-        <td>4500 mAh</td>
-        <td>120 MP</td>
-        <td>₹1,20,000</td>
-      </tr>
-      <tr>
-        <td>OnePlus 13</td>
-        <td>4800 mAh</td>
-        <td>108 MP</td>
-        <td>₹70,000</td>
-      </tr>
-    </table>
-  </div>
+    <!-- Step 2: Select Category -->
+    <section id="step2" class="step" style="display:none;">
+      <h2>Step 2: Choose Category for Each Device</h2>
+      <div id="category-selection"></div>
+      <button onclick="goToStep3()">Next → Select Models</button>
+    </section>
 
-  <div class="device-card">
-    <h2>Smartwatches</h2>
-    <table>
-      <tr>
-        <th>Model</th>
-        <th>Battery</th>
-        <th>Features</th>
-        <th>Price</th>
-      </tr>
-      <tr>
-        <td>Apple Watch X</td>
-        <td>18 hrs</td>
-        <td>Heart Rate, ECG</td>
-        <td>₹45,000</td>
-      </tr>
-      <tr>
-        <td>Galaxy Watch 7</td>
-        <td>24 hrs</td>
-        <td>Sleep Tracking, GPS</td>
-        <td>₹35,000</td>
-      </tr>
-      <tr>
-        <td>Fitbit Ultra</td>
-        <td>7 days</td>
-        <td>Fitness Tracking</td>
-        <td>₹20,000</td>
-      </tr>
-    </table>
-  </div>
+    <!-- Step 3: Select Models -->
+    <section id="step3" class="step" style="display:none;">
+      <h2>Step 3: Select Models</h2>
+      <div id="model-selection"></div>
+      <button onclick="generateComparison()">Compare Devices</button>
+    </section>
 
-  <div class="device-card">
-    <h2>Smart Speakers</h2>
-    <table>
-      <tr>
-        <th>Model</th>
-        <th>Sound Quality</th>
-        <th>Assistant</th>
-        <th>Price</th>
-      </tr>
-      <tr>
-        <td>Echo Max</td>
-        <td>High</td>
-        <td>Alexa</td>
-        <td>₹12,000</td>
-      </tr>
-      <tr>
-        <td>Google Nest</td>
-        <td>Medium</td>
-        <td>Google Assistant</td>
-        <td>₹10,000</td>
-      </tr>
-      <tr>
-        <td>Apple HomePod</td>
-        <td>High</td>
-        <td>Siri</td>
-        <td>₹15,000</td>
-      </tr>
-    </table>
-  </div>
+    <!-- Step 4: AI-Style Comparison Results -->
+    <section id="step4" class="step" style="display:none;">
+      <h2>✅ AI-Style Comparison Results</h2>
+      <div id="comparison-results"></div>
+      <button onclick="restart()">Start Over</button>
+    </section>
+  </main>
 
-  <a href="../../index.html" class="back-btn">← Back to Home</a>
-
-</div>
-
+  <script src="devices.json" type="module"></script>
+  <script src="rules.js"></script>
+  <script src="search.js"></script>
+  <script src="compare.js"></script>
 </body>
 </html>
