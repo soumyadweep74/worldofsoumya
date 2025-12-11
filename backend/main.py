@@ -1,6 +1,10 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import os, openai
+from dotenv import load_dotenv  # add this line
+
+# Load environment variables from .env
+load_dotenv()  # this loads OPENAI_API_KEY from backend/.env
 
 app = FastAPI()
 
@@ -11,6 +15,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Use the API key from environment
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 @app.post("/compare")
