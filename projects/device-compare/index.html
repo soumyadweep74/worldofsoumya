@@ -1,116 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Device Comparison | Projects</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Device Comparison | Projects</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #0a0a0a;
-      font-family: 'Orbitron', sans-serif;
-      color: #00ff00;
-      overflow-x: hidden;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0a0a;
+  font-family: 'Orbitron', sans-serif;
+  color: #00ff00;
+}
 
-    a {
-      color: #00ff00;
-      text-decoration: none;
-    }
+header {
+  text-align: center;
+  padding: 50px 20px 20px;
+}
 
-    a:hover {
-      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-    }
+header h1 {
+  font-size: 3rem;
+  text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+}
 
-    header {
-      text-align: center;
-      padding: 50px 20px 30px;
-    }
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
 
-    header h1 {
-      font-size: 3rem;
-      text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
-    }
+.device-card {
+  background: rgba(0,255,0,0.05);
+  border: 1px solid #00ff00;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 0 20px #00ff00;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-    }
+.device-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
+}
 
-    .device-card {
-      background: rgba(0, 255, 0, 0.05);
-      border: 1px solid #00ff00;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
-      box-shadow: 0 0 20px #00ff00;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
+.device-card h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px #00ff00;
+}
 
-    .device-card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
-    .device-card h2 {
-      margin-top: 0;
-      font-size: 1.8rem;
-      text-shadow: 0 0 10px #00ff00;
-    }
+table, th, td {
+  border: 1px solid #00ff00;
+}
 
-    .device-card p {
-      font-size: 1rem;
-      line-height: 1.5;
-    }
+th, td {
+  padding: 8px;
+  text-align: left;
+}
 
-    .back-btn {
-      display: block;
-      width: fit-content;
-      margin: 40px auto 0;
-      padding: 12px 30px;
-      border: 2px solid #00ff00;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 1.1rem;
-      color: #00ff00;
-      text-decoration: none;
-      box-shadow: 0 0 15px #00ff00;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
+th {
+  background: rgba(0,255,0,0.1);
+}
 
-    .back-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
-    }
-  </style>
+.back-btn {
+  display: block;
+  width: fit-content;
+  margin: 40px auto 0;
+  padding: 12px 30px;
+  border: 2px solid #00ff00;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #00ff00;
+  text-decoration: none;
+  box-shadow: 0 0 15px #00ff00;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.back-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Smart Device Comparison</h1>
-    <p>Compare daily-use smart devices and choose the best for you!</p>
-  </header>
 
-  <div class="container">
-    <div class="device-card">
-      <h2>Smartphone Comparison</h2>
-      <p>Compare the latest smartphones by battery life, camera quality, performance, and price to find the perfect fit.</p>
-    </div>
+<header>
+  <h1>Smart Device Comparison</h1>
+  <p>Compare daily-use smart devices and choose the best for you!</p>
+</header>
 
-    <div class="device-card">
-      <h2>Smartwatch Comparison</h2>
-      <p>Evaluate smartwatches based on health features, battery life, design, and compatibility with your phone.</p>
-    </div>
+<div class="container">
 
-    <div class="device-card">
-      <h2>Smart Speaker Comparison</h2>
-      <p>Analyze smart speakers by sound quality, AI assistant features, connectivity, and price for your home setup.</p>
-    </div>
-
-    <a href="../index.html" class="back-btn">← Back to Home</a>
+  <div class="device-card">
+    <h2>Smartphones</h2>
+    <table>
+      <tr>
+        <th>Model</th>
+        <th>Battery</th>
+        <th>Camera</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>Galaxy S25</td>
+        <td>5000 mAh</td>
+        <td>200 MP</td>
+        <td>₹80,000</td>
+      </tr>
+      <tr>
+        <td>iPhone 17</td>
+        <td>4500 mAh</td>
+        <td>120 MP</td>
+        <td>₹1,20,000</td>
+      </tr>
+      <tr>
+        <td>OnePlus 13</td>
+        <td>4800 mAh</td>
+        <td>108 MP</td>
+        <td>₹70,000</td>
+      </tr>
+    </table>
   </div>
+
+  <div class="device-card">
+    <h2>Smartwatches</h2>
+    <table>
+      <tr>
+        <th>Model</th>
+        <th>Battery</th>
+        <th>Features</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>Apple Watch X</td>
+        <td>18 hrs</td>
+        <td>Heart Rate, ECG</td>
+        <td>₹45,000</td>
+      </tr>
+      <tr>
+        <td>Galaxy Watch 7</td>
+        <td>24 hrs</td>
+        <td>Sleep Tracking, GPS</td>
+        <td>₹35,000</td>
+      </tr>
+      <tr>
+        <td>Fitbit Ultra</td>
+        <td>7 days</td>
+        <td>Fitness Tracking</td>
+        <td>₹20,000</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="device-card">
+    <h2>Smart Speakers</h2>
+    <table>
+      <tr>
+        <th>Model</th>
+        <th>Sound Quality</th>
+        <th>Assistant</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>Echo Max</td>
+        <td>High</td>
+        <td>Alexa</td>
+        <td>₹12,000</td>
+      </tr>
+      <tr>
+        <td>Google Nest</td>
+        <td>Medium</td>
+        <td>Google Assistant</td>
+        <td>₹10,000</td>
+      </tr>
+      <tr>
+        <td>Apple HomePod</td>
+        <td>High</td>
+        <td>Siri</td>
+        <td>₹15,000</td>
+      </tr>
+    </table>
+  </div>
+
+  <a href="../../index.html" class="back-btn">← Back to Home</a>
+
+</div>
+
 </body>
 </html>
