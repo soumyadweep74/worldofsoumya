@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header>
     <h1>Smart Device Comparison AI</h1>
     <p>Compare any devices in the world instantly!</p>
@@ -24,21 +23,20 @@
       </div>
     </section>
 
-    <!-- Step 2: Select Category -->
+    <!-- Step 2: Device Names -->
     <section id="step2" class="step" style="display:none;">
-      <h2>Step 2: Choose Category for Each Device</h2>
+      <h2>Step 2: Enter Device Names</h2>
       <div id="category-selection"></div>
-      <button onclick="goToStep3()">Next → Select Models</button>
+      <button onclick="goToStep3()">Generate Comparison →</button>
     </section>
 
-    <!-- Step 3: Select Models -->
+    <!-- Step 3: Loading AI Result -->
     <section id="step3" class="step" style="display:none;">
-      <h2>Step 3: Search & Select Device Models</h2>
+      <h2>Generating AI Comparison...</h2>
       <div id="model-selection"></div>
-      <button onclick="generateComparison()">Compare Devices</button>
     </section>
 
-    <!-- Step 4: AI-Style Comparison Results -->
+    <!-- Step 4: Show AI Results -->
     <section id="step4" class="step" style="display:none;">
       <h2>✅ AI-Style Comparison Results</h2>
       <div id="comparison-results"></div>
